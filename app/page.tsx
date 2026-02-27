@@ -14,7 +14,8 @@ export default function Home() {
   const [words, setWords] = useState("bird + boxe + old school");
   const [background, setBackground] = useState<Background>("white");
 
-  const { loading, dataUrl, error, generate, download } = useGenerate();
+  const { loading, dataUrl, error, generate, download, getShareableUrl } =
+    useGenerate();
 
   function handleGenerate() {
     generate(words, background);
@@ -70,6 +71,7 @@ export default function Home() {
           loading={loading}
           onDownload={download}
           onRegenerate={handleGenerate}
+          getShareableUrl={getShareableUrl}
         />
       </div>
 

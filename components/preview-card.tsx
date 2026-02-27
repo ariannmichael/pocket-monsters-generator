@@ -10,6 +10,7 @@ interface PreviewCardProps {
   loading: boolean;
   onDownload: () => void;
   onRegenerate: () => void;
+  getShareableUrl: () => Promise<string | null>;
 }
 
 const CHECKER_BG =
@@ -17,22 +18,22 @@ const CHECKER_BG =
 
 const SHARE_TEXT = "Check out my Pocket Monster!";
 
-function getShareTextWithUrl(): string {
-  const url = typeof window !== "undefined" ? window.location.href : "";
-  return url ? `${SHARE_TEXT} ${url}` : SHARE_TEXT;
+function getShareText(url: string | null): string {
+  const link = url || (typeof window !== "undefined" ? window.location.href : "");
+  return link ? `${SHARE_TEXT} ${link}` : SHARE_TEXT;
 }
 
-function openTwitterShare(): void {
+function openTwitterShare(text: string): void {
   window.open(
-    `https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareTextWithUrl())}`,
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
     "_blank",
     "noopener,noreferrer",
   );
 }
 
-function openWhatsAppShare(): void {
+function openWhatsAppShare(text: string): void {
   window.open(
-    `https://wa.me/?text=${encodeURIComponent(getShareTextWithUrl())}`,
+    `https://wa.me/?text=${encodeURIComponent(text)}`,
     "_blank",
     "noopener,noreferrer",
   );
@@ -56,7 +57,10 @@ function dataUrlToFile(dataUrl: string, filename: string): File {
 }
 
 /** Share image via Web Share API when supported; returns true if shared. */
-async function shareWithImage(dataUrl: string): Promise<boolean> {
+async function shareWithImage(
+  dataUrl: string,
+  text: string,
+): Promise<boolean> {
   if (!navigator.share) return false;
   const file = dataUrlToFile(dataUrl, "pocket-monster.png");
   if (navigator.canShare && !navigator.canShare({ files: [file] })) return false;
@@ -64,7 +68,7 @@ async function shareWithImage(dataUrl: string): Promise<boolean> {
     await navigator.share({
       files: [file],
       title: "Pocket Monster",
-      text: getShareTextWithUrl(),
+      text,
     });
     return true;
   } catch {
@@ -102,6 +106,7 @@ export function PreviewCard({
   loading,
   onDownload,
   onRegenerate,
+  getShareableUrl,
 }: PreviewCardProps) {
   const [shareHint, setShareHint] = useState<string | null>(null);
 
@@ -113,32 +118,35 @@ export function PreviewCard({
 
   const shareToX = useCallback(async () => {
     if (!dataUrl) return;
-    const shared = await shareWithImage(dataUrl);
+    const imageUrl = await getShareableUrl();
+    const text = getShareText(imageUrl);
+    const shared = await shareWithImage(dataUrl, text);
     if (!shared) {
-      downloadImage(dataUrl);
-      openTwitterShare();
-      setShareHint("Image downloaded—attach it when posting on X.");
+      openTwitterShare(text);
+      setShareHint("To attach the image, use the Download PNG button above.");
     }
-  }, [dataUrl]);
+  }, [dataUrl, getShareableUrl]);
 
   const shareToWhatsApp = useCallback(async () => {
     if (!dataUrl) return;
-    const shared = await shareWithImage(dataUrl);
+    const imageUrl = await getShareableUrl();
+    const text = getShareText(imageUrl);
+    const shared = await shareWithImage(dataUrl, text);
     if (!shared) {
-      downloadImage(dataUrl);
-      openWhatsAppShare();
-      setShareHint("Image downloaded—attach it in WhatsApp.");
+      openWhatsAppShare(text);
+      setShareHint("To attach the image, use the Download PNG button above.");
     }
-  }, [dataUrl]);
+  }, [dataUrl, getShareableUrl]);
 
   const shareToInstagram = useCallback(async () => {
     if (!dataUrl) return;
-    const shared = await shareWithImage(dataUrl);
+    const imageUrl = await getShareableUrl();
+    const text = getShareText(imageUrl);
+    const shared = await shareWithImage(dataUrl, text);
     if (!shared) {
-      downloadImage(dataUrl);
-      setShareHint("Image downloaded—attach it when posting on Instagram.");
+      setShareHint("To attach the image, use the Download PNG button above.");
     }
-  }, [dataUrl]);
+  }, [dataUrl, getShareableUrl]);
 
   return (
     <div className="rounded-xl border border-border bg-surface p-5">

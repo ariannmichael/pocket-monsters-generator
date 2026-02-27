@@ -9,6 +9,7 @@ interface GenerateState {
   promptUsed: string | null;
   error: string | null;
   dataUrl: string | null;
+  shareableUrl: string | null;
 }
 
 export function useGenerate() {
@@ -16,6 +17,7 @@ export function useGenerate() {
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [promptUsed, setPromptUsed] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [shareableUrl, setShareableUrl] = useState<string | null>(null);
 
   const dataUrl = useMemo(
     () => (imageBase64 ? `data:image/png;base64,${imageBase64}` : null),
@@ -27,6 +29,7 @@ export function useGenerate() {
     setError(null);
     setImageBase64(null);
     setPromptUsed(null);
+    setShareableUrl(null);
 
     try {
       const res = await fetch("/api/generate", {
@@ -59,6 +62,25 @@ export function useGenerate() {
     }
   }, []);
 
+  const getShareableUrl = useCallback(async (): Promise<string | null> => {
+    if (!imageBase64) return null;
+    if (shareableUrl) return shareableUrl;
+    try {
+      const res = await fetch("/api/save-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64 }),
+      });
+      const data = (await res.json()) as { url?: string; error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Failed to save image");
+      const url = data.url ?? null;
+      if (url) setShareableUrl(url);
+      return url;
+    } catch {
+      return null;
+    }
+  }, [imageBase64, shareableUrl]);
+
   const download = useCallback(() => {
     if (!dataUrl) return;
     const a = document.createElement("a");
@@ -67,7 +89,14 @@ export function useGenerate() {
     a.click();
   }, [dataUrl]);
 
-  const state: GenerateState = { loading, imageBase64, promptUsed, error, dataUrl };
+  const state: GenerateState = {
+    loading,
+    imageBase64,
+    promptUsed,
+    error,
+    dataUrl,
+    shareableUrl,
+  };
 
-  return { ...state, generate, download };
+  return { ...state, generate, download, getShareableUrl };
 }
