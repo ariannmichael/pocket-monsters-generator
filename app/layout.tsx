@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { MonsterScrollBackground } from "@/components/monster-scroll-background";
 
 export const metadata: Metadata = {
   title: "Pocket Monster Generator",
@@ -14,7 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-bg text-text antialiased" suppressHydrationWarning>
-        {children}
+        <MonsterScrollBackground />
+        <div className="relative z-10">{children}</div>
       </body>
     </html>
   );

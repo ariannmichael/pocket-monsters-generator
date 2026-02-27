@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "04B 30";
+  src: url("/fonts/04B_30__.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @theme inline {
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-pixel: "04B 30", ui-monospace, monospace;
   --color-bg: var(--color-bg);
   --color-surface: var(--color-surface);
   --color-border: var(--color-border);
@@ -39,4 +47,37 @@
 body {
   background: var(--color-bg);
   color: var(--color-text);
+}
+
+/* Scrolling monster background rows */
+@keyframes monster-scroll-rtl {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes monster-scroll-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.monster-scroll-track {
+  animation-duration: 45s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.monster-scroll-rtl {
+  animation-name: monster-scroll-rtl;
+}
+
+.monster-scroll-ltr {
+  animation-name: monster-scroll-ltr;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import type { Background } from "@/lib/types";
+import { LoadingSprite } from "@/components/loading-sprite";
 
 interface GeneratorFormProps {
   words: string;
@@ -49,10 +50,17 @@ export function GeneratorForm({
       <button
         type="submit"
         disabled={loading}
-        className="rounded-lg bg-primary px-5 py-3 text-base font-medium text-white transition-colors
+        className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-base font-medium text-white transition-colors
                    hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? "Generating..." : "Generate"}
+        {loading ? (
+          <>
+            <LoadingSprite size={20} />
+            Generating...
+          </>
+        ) : (
+          "Generate"
+        )}
       </button>
     </form>
   );

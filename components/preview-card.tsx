@@ -1,6 +1,7 @@
 "use client";
 
 import type { Background } from "@/lib/types";
+import { LoadingSprite } from "@/components/loading-sprite";
 
 interface PreviewCardProps {
   dataUrl: string | null;
@@ -64,9 +65,16 @@ export function PreviewCard({
           </div>
         </>
       ) : (
-        <p className="py-6 text-sm text-text-muted">
-          {loading ? "Generating your monster..." : "No image yet. Hit Generate to start."}
-        </p>
+        <div className="py-6">
+          {loading ? (
+            <div className="flex flex-col items-center gap-3 text-sm text-text-muted">
+              <LoadingSprite />
+              <p>Generating your monster...</p>
+            </div>
+          ) : (
+            <p className="text-sm text-text-muted">No image yet. Hit Generate to start.</p>
+          )}
+        </div>
       )}
     </div>
   );
