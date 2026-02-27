@@ -13,6 +13,7 @@ const MONSTER_IMAGES = [
   "/monsters/pocket-monster (10).png",
   "/monsters/pocket-monster (11).png",
   "/monsters/pocket-monster (12).png",
+  "/monsters/pocket-monster (13).png",
 ];
 
 export function MonsterScrollBackground() {
