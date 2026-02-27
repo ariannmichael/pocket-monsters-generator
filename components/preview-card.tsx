@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import type { Background } from "@/lib/types";
 import { LoadingSprite } from "@/components/loading-sprite";
 
@@ -102,11 +103,54 @@ export function PreviewCard({
   onDownload,
   onRegenerate,
 }: PreviewCardProps) {
+  const [shareHint, setShareHint] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!shareHint) return;
+    const t = setTimeout(() => setShareHint(null), 5000);
+    return () => clearTimeout(t);
+  }, [shareHint]);
+
+  const shareToX = useCallback(async () => {
+    if (!dataUrl) return;
+    const shared = await shareWithImage(dataUrl);
+    if (!shared) {
+      downloadImage(dataUrl);
+      openTwitterShare();
+      setShareHint("Image downloaded—attach it when posting on X.");
+    }
+  }, [dataUrl]);
+
+  const shareToWhatsApp = useCallback(async () => {
+    if (!dataUrl) return;
+    const shared = await shareWithImage(dataUrl);
+    if (!shared) {
+      downloadImage(dataUrl);
+      openWhatsAppShare();
+      setShareHint("Image downloaded—attach it in WhatsApp.");
+    }
+  }, [dataUrl]);
+
+  const shareToInstagram = useCallback(async () => {
+    if (!dataUrl) return;
+    const shared = await shareWithImage(dataUrl);
+    if (!shared) {
+      downloadImage(dataUrl);
+      setShareHint("Image downloaded—attach it when posting on Instagram.");
+    }
+  }, [dataUrl]);
+
   return (
     <div className="rounded-xl border border-border bg-surface p-5">
       <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-text-muted">
         Preview
       </h2>
+
+      {shareHint && (
+        <p className="mb-3 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-text">
+          {shareHint}
+        </p>
+      )}
 
       {dataUrl ? (
         <>
@@ -149,11 +193,7 @@ export function PreviewCard({
             <span className="text-xs text-text-muted">Share:</span>
             <button
               type="button"
-              onClick={async () => {
-                if (!dataUrl) return;
-                const shared = await shareWithImage(dataUrl);
-                if (!shared) openTwitterShare();
-              }}
+              onClick={shareToX}
               className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-text transition-colors hover:bg-border"
               title="Share on X (Twitter)"
             >
@@ -162,11 +202,7 @@ export function PreviewCard({
             </button>
             <button
               type="button"
-              onClick={async () => {
-                if (!dataUrl) return;
-                const shared = await shareWithImage(dataUrl);
-                if (!shared) openWhatsAppShare();
-              }}
+              onClick={shareToWhatsApp}
               className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-text transition-colors hover:bg-border"
               title="Share on WhatsApp"
             >
@@ -175,11 +211,7 @@ export function PreviewCard({
             </button>
             <button
               type="button"
-              onClick={async () => {
-                if (!dataUrl) return;
-                const shared = await shareWithImage(dataUrl);
-                if (!shared) downloadImage(dataUrl);
-              }}
+              onClick={shareToInstagram}
               className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-text transition-colors hover:bg-border"
               title="Share on Instagram"
             >
