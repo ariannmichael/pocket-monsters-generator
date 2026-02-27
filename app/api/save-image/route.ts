@@ -48,6 +48,7 @@ export async function POST(req: Request) {
 
     const id = crypto.randomUUID();
     const blob = await put(`monsters/${id}.png`, binary, {
+      access: "private",
       contentType: "image/png",
     });
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { MonsterScrollBackground } from "@/components/monster-scroll-background";
 
 const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body className="bg-bg text-text antialiased" suppressHydrationWarning>
         <MonsterScrollBackground />
         <div className="relative z-10">{children}</div>
+        <Analytics />
       </body>
     </html>
   );
