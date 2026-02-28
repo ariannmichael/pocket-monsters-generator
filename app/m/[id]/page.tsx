@@ -5,12 +5,6 @@ import { kv } from "@vercel/kv";
 const CHECKER_BG =
   "repeating-conic-gradient(#d4d4d4 0% 25%, #e5e5e5 0% 50%) 50% / 20px 20px";
 
-function getBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return "";
-}
-
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props) {
@@ -19,20 +13,26 @@ export async function generateMetadata({ params }: Props) {
     ? !!(await kv.get(`monster:${id}`))
     : false;
   if (!exists) return { title: "Pocket Monster" };
-  const imageUrl = `${getBaseUrl()}/api/monster-image/${id}`;
+  // Relative URLs; Next.js resolves them with layout metadataBase for X/WhatsApp previews
+  const imagePath = `/api/monster-image/${id}`;
+  const pagePath = `/m/${id}`;
   return {
     title: "Pocket Monster",
     description: "Check out this Pocket Monster!",
     openGraph: {
       title: "Pocket Monster",
       description: "Check out this Pocket Monster!",
-      images: [{ url: imageUrl, width: 256, height: 256, alt: "Pocket Monster" }],
+      url: pagePath,
+      type: "website",
+      images: [
+        { url: imagePath, width: 256, height: 256, alt: "Pocket Monster" },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: "Pocket Monster",
       description: "Check out this Pocket Monster!",
-      images: [imageUrl],
+      images: [imagePath],
     },
   };
 }
