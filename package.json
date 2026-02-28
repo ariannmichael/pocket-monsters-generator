@@ -2,6 +2,7 @@
   "name": "pocket-monsters",
   "version": "0.1.0",
   "private": true,
+  "author": "Ariann Michael",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
