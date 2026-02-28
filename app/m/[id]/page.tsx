@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: "Pocket Monster",
     description: "Check out this Pocket Monster!",
+    alternates: { canonical: pageUrl },
     openGraph: {
       title: "Pocket Monster",
       description: "Check out this Pocket Monster!",
