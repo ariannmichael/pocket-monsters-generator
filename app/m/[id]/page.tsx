@@ -15,15 +15,7 @@ export async function generateMetadata({ params }: Props) {
     : false;
   if (!exists) return { title: "Pocket Monster" };
   const base = getBaseUrl();
-  const imageUrl = `${base}/api/monster-image/${id}`;
   const pageUrl = `${base}/m/${id}`;
-  const imageConfig = {
-    url: imageUrl,
-    width: 256,
-    height: 256,
-    alt: "Pocket Monster",
-    ...(imageUrl.startsWith("https://") && { secureUrl: imageUrl }),
-  };
   return {
     title: "Pocket Monster",
     description: "Check out this Pocket Monster!",
@@ -33,13 +25,11 @@ export async function generateMetadata({ params }: Props) {
       description: "Check out this Pocket Monster!",
       url: pageUrl,
       type: "website",
-      images: [imageConfig],
     },
     twitter: {
       card: "summary_large_image",
       title: "Pocket Monster",
       description: "Check out this Pocket Monster!",
-      images: [imageUrl],
     },
   };
 }

@@ -1,14 +1,16 @@
 import { ImageResponse } from "next/og";
-import { getBaseUrl } from "@/lib/site-url";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const alt = "Pocket Monster Generator – GBA-style pixel sprite maker";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const dynamic = "force-dynamic";
 
 export default async function Image() {
-  const baseUrl = getBaseUrl();
-  const spriteUrl = `${baseUrl}/character_down_walk_1.png`;
+  const spriteBuffer = await readFile(
+    join(process.cwd(), "public", "character_down_walk_1.png"),
+  );
+  const spriteDataUrl = `data:image/png;base64,${spriteBuffer.toString("base64")}`;
 
   return new ImageResponse(
     (
@@ -20,7 +22,8 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0a0a0a 0%, #171717 50%, #262626 100%)",
+          background:
+            "linear-gradient(135deg, #0a0a0a 0%, #171717 50%, #262626 100%)",
           padding: 48,
         }}
       >
@@ -33,7 +36,7 @@ export default async function Image() {
           }}
         >
           <img
-            src={spriteUrl}
+            src={spriteDataUrl}
             alt=""
             width={200}
             height={200}
@@ -73,6 +76,6 @@ export default async function Image() {
         </div>
       </div>
     ),
-    { ...size }
+    { ...size },
   );
 }

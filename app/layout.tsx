@@ -49,21 +49,12 @@ export const metadata: Metadata = {
     title: "Pocket Monster Generator – GBA-style pixel sprite maker",
     description:
       "Generate GBA-era pixel sprite monsters from 2–5 words. Free online tool for retro pixel art creatures.",
-    images: [
-      {
-        url: `${baseUrl}/character_down_walk_1.png`,
-        width: 256,
-        height: 256,
-        alt: "Pocket Monster Generator – pixel sprite icon",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Pocket Monster Generator – GBA-style pixel sprite maker",
     description:
       "Generate GBA-era pixel sprite monsters from 2–5 words. Free online tool for retro pixel art creatures.",
-    images: [`${baseUrl}/character_down_walk_1.png`],
   },
   ...(googleVerification && {
     verification: { google: googleVerification },
