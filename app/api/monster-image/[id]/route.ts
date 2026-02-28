@@ -29,6 +29,7 @@ export async function GET(
       headers: {
         "Content-Type": blob.contentType ?? "image/png",
         "Cache-Control": "public, max-age=31536000, immutable",
+        "Content-Disposition": 'inline; filename="monster.png"',
       },
     });
   } catch {
