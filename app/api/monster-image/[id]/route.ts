@@ -1,4 +1,3 @@
-import { get } from "@vercel/blob";
 import { kv } from "@vercel/kv";
 import { NextResponse } from "next/server";
 
@@ -19,20 +18,10 @@ export async function GET(
     return new NextResponse(null, { status: 404 });
   }
 
-  try {
-    const result = await get(blobUrl, { access: "private" });
-    if (!result || result.statusCode !== 200) {
-      return new NextResponse(null, { status: 404 });
-    }
-    const { stream, blob } = result;
-    return new NextResponse(stream, {
-      headers: {
-        "Content-Type": blob.contentType ?? "image/png",
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "Content-Disposition": 'inline; filename="monster.png"',
-      },
-    });
-  } catch {
-    return new NextResponse(null, { status: 404 });
-  }
+  return NextResponse.redirect(blobUrl, {
+    status: 302,
+    headers: {
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  });
 }

@@ -10,12 +10,19 @@ type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const exists = process.env.KV_REST_API_URL
-    ? !!(await kv.get(`monster:${id}`))
-    : false;
-  if (!exists) return { title: "Pocket Monster" };
+  const blobUrl = process.env.KV_REST_API_URL
+    ? ((await kv.get(`monster:${id}`)) as string | null)
+    : null;
+  if (!blobUrl) return { title: "Pocket Monster" };
   const base = getBaseUrl();
   const pageUrl = `${base}/m/${id}`;
+  const imageConfig = {
+    url: blobUrl,
+    width: 256,
+    height: 256,
+    alt: "Pocket Monster",
+    type: "image/png",
+  };
   return {
     title: "Pocket Monster",
     description: "Check out this Pocket Monster!",
@@ -25,22 +32,24 @@ export async function generateMetadata({ params }: Props) {
       description: "Check out this Pocket Monster!",
       url: pageUrl,
       type: "website",
+      images: [imageConfig],
     },
     twitter: {
       card: "summary_large_image",
       title: "Pocket Monster",
       description: "Check out this Pocket Monster!",
+      images: [blobUrl],
     },
   };
 }
 
 export default async function MonsterPage({ params }: Props) {
   const { id } = await params;
-  const exists = process.env.KV_REST_API_URL
-    ? !!(await kv.get(`monster:${id}`))
-    : false;
+  const blobUrl = process.env.KV_REST_API_URL
+    ? ((await kv.get(`monster:${id}`)) as string | null)
+    : null;
 
-  if (!exists) {
+  if (!blobUrl) {
     notFound();
   }
 
