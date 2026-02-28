@@ -16,13 +16,6 @@ export const metadata: Metadata = {
   }),
 };
 
-const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
-const adsenseClientParam = adsenseClientId
-  ? adsenseClientId.startsWith("ca-pub-")
-    ? adsenseClientId
-    : `ca-pub-${adsenseClientId}`
-  : null;
-
 export default function RootLayout({
   children,
 }: {
@@ -31,16 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {adsenseClientParam && (
-          <>
-            <meta name="google-adsense-account" content={adsenseClientParam} />
-            <script
-              async
-              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientParam}`}
-              crossOrigin="anonymous"
-            />
-          </>
-        )}
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3370565214003746"
+      crossOrigin="anonymous"></script>
       </head>
       <body className="bg-bg text-text antialiased" suppressHydrationWarning>
         <MonsterScrollBackground />
