@@ -1,4 +1,5 @@
 import { put } from "@vercel/blob";
+import { kv } from "@vercel/kv";
 import { NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -8,6 +9,17 @@ function getClientIp(req: Request): string {
     req.headers.get("x-real-ip") ||
     "unknown"
   );
+}
+
+function getOrigin(req: Request): string {
+  try {
+    const url = new URL(req.url);
+    return url.origin;
+  } catch {
+    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+    const proto = req.headers.get("x-forwarded-proto") ?? "https";
+    return host ? `${proto}://${host}` : "";
+  }
 }
 
 export async function POST(req: Request) {
@@ -48,11 +60,18 @@ export async function POST(req: Request) {
 
     const id = crypto.randomUUID();
     const blob = await put(`monsters/${id}.png`, binary, {
-      access: "public",
+      access: "private",
       contentType: "image/png",
     });
 
-    return NextResponse.json({ url: blob.url, id });
+    let url = blob.url;
+    const origin = getOrigin(req);
+    if (origin && process.env.KV_REST_API_URL) {
+      await kv.set(`monster:${id}`, blob.url);
+      url = `${origin}/m/${id}`;
+    }
+
+    return NextResponse.json({ url, id });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json(
