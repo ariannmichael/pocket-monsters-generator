@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { getBaseUrl } from "@/lib/site-url";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { MonsterScrollBackground } from "@/components/monster-scroll-background";
 
 const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_APP_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
-  "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL(getBaseUrl()),
   title: "Pocket Monster Generator",
   description: "Generate GBA-era pixel sprite monsters from 2-5 words.",
   icons: {
