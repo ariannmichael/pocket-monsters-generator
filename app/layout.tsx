@@ -6,6 +6,12 @@ import { MonsterScrollBackground } from "@/components/monster-scroll-background"
 
 const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 const baseUrl = getBaseUrl();
+const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+const adsenseScriptSrc =
+  adsenseClientId &&
+  `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${
+    adsenseClientId.startsWith("ca-pub-") ? adsenseClientId : `ca-pub-${adsenseClientId}`
+  }`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -84,11 +90,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3370565214003746"
-          crossOrigin="anonymous"
-        />
+        {adsenseScriptSrc && (
+          <script async src={adsenseScriptSrc} crossOrigin="anonymous" />
+        )}
       </head>
       <body className="bg-bg text-text antialiased" suppressHydrationWarning>
         <MonsterScrollBackground />

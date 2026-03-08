@@ -33,7 +33,7 @@ Enter 2-5 words separated by commas or plus signs (e.g. `volcano + turtle`), pic
 - **Loading sprite** — animated character walk cycle while generating
 - **Download** — save the generated sprite as a PNG
 - **Dark mode** — follows system preference
-- **Google AdSense** — optional ad units, gated by environment variables
+- **Google AdSense** — optional ad units, gated by environment variables (only on content pages; see [AdSense program policies](https://support.google.com/adsense/answer/48182))
 - **Analytics** — Vercel Analytics for page-view tracking
 - **Rate limiting** — 10 req/min for generation, 20 req/min for image saving (per IP)
 
@@ -55,8 +55,10 @@ Enter 2-5 words separated by commas or plus signs (e.g. `volcano + turtle`), pic
 | `KV_REST_API_URL` | No | Upstash Redis URL — enables `/m/[id]` share links |
 | `KV_REST_API_TOKEN` | No | Upstash Redis token |
 | `NEXT_PUBLIC_APP_URL` | No | Canonical URL for OG tags (defaults to `VERCEL_URL`) |
-| `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | No | Google AdSense publisher ID |
+| `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | No | Google AdSense publisher ID (script loads only when set) |
 | `NEXT_PUBLIC_ADSENSE_SLOT` | No | Google AdSense ad-unit slot ID |
+
+**AdSense policy:** Ads are shown only on the main generator page (substantial content). They are not shown on shared monster pages (`/m/[id]`), error/404, or navigation-only screens, per [AdSense program policies](https://support.google.com/adsense/answer/48182).
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | No | Google site-verification code |
 
 ## Project Structure

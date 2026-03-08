@@ -10,6 +10,11 @@ import { PreviewCard } from "@/components/preview-card";
 
 const adSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT ?? "";
 
+/**
+ * Home page: main generator with full editorial content.
+ * AdSense policy: ads only on pages with substantial content (not on empty,
+ * under-construction, or navigation-only screens). This page qualifies.
+ */
 export default function Home() {
   const [words, setWords] = useState("bird + boxe + old school");
   const [background, setBackground] = useState<Background>("white");

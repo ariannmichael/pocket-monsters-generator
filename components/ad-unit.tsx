@@ -23,8 +23,11 @@ type AdUnitProps = {
 
 /**
  * Renders a single Google AdSense unit. Only renders when
- * NEXT_PUBLIC_ADSENSE_CLIENT_ID is set. Uses the global adsbygoogle script
- * injected by the root layout.
+ * NEXT_PUBLIC_ADSENSE_CLIENT_ID and slot are set. Uses the global adsbygoogle
+ * script injected by the root layout (only when AdSense is configured).
+ *
+ * AdSense policy: use only on pages with substantial editorial content — not
+ * on empty, under-construction, or navigation/alert-only screens.
  */
 export function AdUnit({ slot, format = "auto", className }: AdUnitProps) {
   const insRef = useRef<HTMLModElement>(null);
