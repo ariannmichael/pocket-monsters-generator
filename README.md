@@ -58,8 +58,9 @@ Enter 2-5 words separated by commas or plus signs (e.g. `volcano + turtle`), pic
 | `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | No | Google AdSense publisher ID (script loads only when set) |
 | `NEXT_PUBLIC_ADSENSE_SLOT` | No | Google AdSense ad-unit slot ID |
 
-**AdSense policy:** Ads are shown only on the main generator page (substantial content). They are not shown on shared monster pages (`/m/[id]`), error/404, or navigation-only screens, per [AdSense program policies](https://support.google.com/adsense/answer/48182).
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | No | Google site-verification code |
+
+**AdSense policy:** Ads are shown only on the main generator page (substantial content). They are not shown on shared monster pages (`/m/[id]`), error/404, or navigation-only screens, per [AdSense program policies](https://support.google.com/adsense/answer/48182). **ads.txt:** `public/ads.txt` is served at `/ads.txt` for AdSense; if your publisher ID differs from the one in the file, replace it with the line from AdSense (Account → Ads.txt).
 
 ## Project Structure
 
@@ -82,6 +83,8 @@ components/
   preview-card.tsx            Sprite preview, download, share actions
   prompt-debug.tsx            Debug view of the prompt sent to fal.ai
   ad-unit.tsx                 Google AdSense ad component
+public/
+  ads.txt                     AdSense authorized sellers (served at /ads.txt)
   monster-scroll-background.tsx  Animated scrolling monster sprite rows
   loading-sprite.tsx          Animated loading sprite (character walk cycle)
 hooks/
